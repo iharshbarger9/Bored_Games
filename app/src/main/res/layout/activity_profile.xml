@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <Spinner
+        android:id="@+id/sp_profile_theme"
+        android:layout_width="158dp"
+        android:layout_height="20dp"
+        android:entries="@android:array/emailAddressTypes"
+        app:layout_constraintEnd_toEndOf="@+id/sp_profile_friends_list"
+        app:layout_constraintTop_toTopOf="@+id/tv_profile_theme" />
+
+    <ImageView
+        android:id="@+id/iv_profile_display_picture"
+        android:layout_width="111dp"
+        android:layout_height="99dp"
+        android:layout_marginEnd="52dp"
+        android:contentDescription="@string/play_this_player_pfp_description"
+        app:layout_constraintEnd_toEndOf="@+id/et_profile_display_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_profile_display_picture"
+        app:srcCompat="@drawable/blank_profile_picture" />
+
+    <TextView
+        android:id="@+id/tv_profile_display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="68dp"
+        android:text="@string/profile_display_name"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_profile_title"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tb_profile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile_title" />
+
+    <TextView
+        android:id="@+id/tv_profile_display_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="@string/profile_display_picture"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_profile_display_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile_display_name" />
+
+    <TextView
+        android:id="@+id/tv_profile_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="@string/profile_theme"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_profile_friends_list"
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile_friends_list" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_profile_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_toolbar_header"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tb_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tb_profile"
+        app:layout_constraintTop_toTopOf="@+id/tb_profile" />
+
+    <TextView
+        android:id="@+id/tv_profile_title"
+        android:layout_width="128dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/profile_title"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_profile_header"
+        app:layout_constraintTop_toBottomOf="@+id/tb_profile" />
+
+    <TextView
+        android:id="@+id/tv_profile_friends_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:text="@string/profile_friends_list"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_profile_display_picture"
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile_display_picture" />
+
+    <EditText
+        android:id="@+id/et_profile_display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintEnd_toEndOf="@+id/tb_profile"
+        app:layout_constraintTop_toTopOf="@+id/tv_profile_display_name" />
+
+    <Spinner
+        android:id="@+id/sp_profile_friends_list"
+        android:layout_width="158dp"
+        android:layout_height="20dp"
+        android:entries="@android:array/emailAddressTypes"
+        app:layout_constraintStart_toStartOf="@+id/iv_profile_display_picture"
+        app:layout_constraintTop_toTopOf="@+id/tv_profile_friends_list" />
+
+    <Button
+        android:id="@+id/bt_profile_set_profile"
+        android:layout_width="273dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="104dp"
+        android:text="@string/profile_set_profile"
+        app:layout_constraintEnd_toEndOf="@+id/sp_profile_theme"
+        app:layout_constraintStart_toStartOf="@+id/tv_profile_theme"
+        app:layout_constraintTop_toBottomOf="@+id/sp_profile_theme" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

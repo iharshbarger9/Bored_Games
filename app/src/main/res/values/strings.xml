@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Bored Games</string>
+    <string name="home_linked_with">Linked with</string>
+    <string name="home_toolbar_header">Bored Games</string>
+    <string name="home_link_button">Link</string>
+    <string name="home_play_button">Play</string>
+    <string name="home_stats_button">Stats</string>
+    <string name="home_profile_button">Profile</string>
+    <string name="home_settings_button">Settings</string>
+    <string name="play_this_player_pfp_description">Your Profile Picture</string>
+    <string name="play_other_player_pfp_description">Other Player\'s Profile Picture</string>
+    <string name="play_ttt_board_description">Tic-Tac-Toe Board</string>
+    <string name="play_this_player_x_or_o_description">Your Token</string>
+    <string name="play_other_player_x_or_o_description">Other Player\'s Token</string>
+    <string name="play_a1_button_description">The A 1 slot</string>
+    <string name="play_a2_button_description">The A 2 slot</string>
+    <string name="play_a3_button_description">The A 3 slot</string>
+    <string name="play_b1_button_description">The B 1 slot</string>
+    <string name="play_b2_button_description">The B 2 slot</string>
+    <string name="play_b3_button_description">The B 3 slot</string>
+    <string name="play_c1_button_description">The C 1 slot</string>
+    <string name="play_c2_button_description">The C 2 slot</string>
+    <string name="play_c3_button_description">The C 3 slot</string>
+    <string name="profile_title">Your Profile</string>
+    <string name="profile_display_name">Display Name</string>
+    <string name="profile_display_picture">Display Picture</string>
+    <string name="profile_friends_list">Friends List</string>
+    <string name="profile_theme">Theme</string>
+    <string name="profile_set_profile">Set Profile</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+</resources>
