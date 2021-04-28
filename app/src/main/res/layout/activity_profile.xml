@@ -14,16 +14,6 @@
         app:layout_constraintEnd_toEndOf="@+id/sp_profile_friends_list"
         app:layout_constraintTop_toTopOf="@+id/tv_profile_theme" />
 
-    <ImageView
-        android:id="@+id/iv_profile_display_picture"
-        android:layout_width="111dp"
-        android:layout_height="99dp"
-        android:layout_marginEnd="52dp"
-        android:contentDescription="@string/play_this_player_pfp_description"
-        app:layout_constraintEnd_toEndOf="@+id/et_profile_display_name"
-        app:layout_constraintTop_toTopOf="@+id/tv_profile_display_picture"
-        app:srcCompat="@drawable/blank_profile_picture" />
-
     <TextView
         android:id="@+id/tv_profile_display_name"
         android:layout_width="wrap_content"
@@ -106,7 +96,6 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="@+id/tb_profile"
         app:layout_constraintTop_toTopOf="@+id/tv_profile_display_name" />
 
@@ -115,7 +104,7 @@
         android:layout_width="158dp"
         android:layout_height="20dp"
         android:entries="@android:array/emailAddressTypes"
-        app:layout_constraintStart_toStartOf="@+id/iv_profile_display_picture"
+        app:layout_constraintEnd_toEndOf="@+id/et_profile_display_name"
         app:layout_constraintTop_toTopOf="@+id/tv_profile_friends_list" />
 
     <Button
@@ -127,5 +116,14 @@
         app:layout_constraintEnd_toEndOf="@+id/sp_profile_theme"
         app:layout_constraintStart_toStartOf="@+id/tv_profile_theme"
         app:layout_constraintTop_toBottomOf="@+id/sp_profile_theme" />
+
+    <ImageView
+        android:id="@+id/iv_profile_display_picture"
+        android:layout_width="108dp"
+        android:layout_height="114dp"
+        app:layout_constraintEnd_toEndOf="@+id/et_profile_display_name"
+        app:layout_constraintStart_toStartOf="@+id/et_profile_display_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_profile_display_picture"
+        app:srcCompat="@drawable/blank_profile_picture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
