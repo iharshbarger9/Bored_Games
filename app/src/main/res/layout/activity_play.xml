@@ -16,46 +16,25 @@
         app:layout_constraintTop_toTopOf="@+id/iv_play_this_player_pfp"
         app:srcCompat="@drawable/blank_profile_picture" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_play"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_play_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/home_toolbar_header"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tb_play"
-        app:layout_constraintEnd_toEndOf="@+id/tb_play"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tb_play" />
-
     <ImageView
         android:id="@+id/iv_play_this_player_token"
         android:layout_width="61dp"
         android:layout_height="47dp"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
         android:contentDescription="@string/play_this_player_x_or_o_description"
-        app:layout_constraintStart_toStartOf="@+id/tb_play"
-        app:layout_constraintTop_toTopOf="@+id/iv_play_other_player_token"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ttt_x" />
 
     <ImageView
         android:id="@+id/iv_play_other_player_token"
         android:layout_width="72dp"
         android:layout_height="50dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="40dp"
         android:contentDescription="@string/play_other_player_x_or_o_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tb_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_play_this_player_token"
         app:srcCompat="@drawable/ttt_o" />
 
     <ImageView
@@ -72,12 +51,14 @@
         android:id="@+id/iv_ttt_board"
         android:layout_width="308dp"
         android:layout_height="345dp"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="60dp"
         android:contentDescription="@string/play_ttt_board_description"
-        app:layout_constraintEnd_toEndOf="@+id/iv_play_other_player_pfp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/iv_play_this_player_pfp"
-        app:layout_constraintTop_toBottomOf="@+id/tb_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_play_this_player_pfp"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/tic_tac_toe_board" />
 
     <ImageButton

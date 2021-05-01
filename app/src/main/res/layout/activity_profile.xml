@@ -18,13 +18,11 @@
         android:id="@+id/tv_profile_display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="68dp"
         android:text="@string/profile_display_name"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/tv_profile_title"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tb_profile"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_profile_title" />
 
     <TextView
@@ -47,37 +45,17 @@
         app:layout_constraintStart_toStartOf="@+id/tv_profile_friends_list"
         app:layout_constraintTop_toBottomOf="@+id/tv_profile_friends_list" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_profile_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/home_toolbar_header"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tb_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tb_profile"
-        app:layout_constraintTop_toTopOf="@+id/tb_profile" />
-
     <TextView
         android:id="@+id/tv_profile_title"
         android:layout_width="128dp"
         android:layout_height="37dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="40dp"
         android:text="@string/profile_title"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_profile_header"
-        app:layout_constraintTop_toBottomOf="@+id/tb_profile" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_profile_friends_list"
@@ -93,10 +71,10 @@
         android:id="@+id/et_profile_display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/tb_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_profile_display_name"
         app:layout_constraintTop_toTopOf="@+id/tv_profile_display_name" />
 
     <Spinner
@@ -113,8 +91,8 @@
         android:layout_height="35dp"
         android:layout_marginTop="104dp"
         android:text="@string/profile_set_profile"
-        app:layout_constraintEnd_toEndOf="@+id/sp_profile_theme"
-        app:layout_constraintStart_toStartOf="@+id/tv_profile_theme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sp_profile_theme" />
 
     <ImageView
