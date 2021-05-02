@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".StatsActivity">
 
-    <TextView
-        android:id="@+id/tv_stats_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/home_toolbar_header"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tb_stats"
-        app:layout_constraintEnd_toEndOf="@+id/tb_stats"
-        app:layout_constraintStart_toStartOf="@+id/tb_stats"
-        app:layout_constraintTop_toTopOf="@+id/tb_stats" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_stats"
@@ -26,4 +15,37 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tb_stats_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_toolbar_header"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tb_stats"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tb_stats"
+        app:layout_constraintTop_toTopOf="@+id/tb_stats" />
+
+    <Button
+        android:id="@+id/update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/update_stats_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tb_stats" />
+
+    <TextView
+        android:id="@+id/text_testUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/update_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

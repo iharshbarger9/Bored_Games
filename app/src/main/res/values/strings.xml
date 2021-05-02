@@ -29,6 +29,7 @@
     <string name="profile_set_profile">Set Profile</string>
     <string name="profile_toast_enter_display_name">Enter a display name</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="update_stats_button">Update Stats</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

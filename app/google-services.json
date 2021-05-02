@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "169992618333",
+    "firebase_url": "https://bored-games-stats-default-rtdb.firebaseio.com",
+    "project_id": "bored-games-stats",
+    "storage_bucket": "bored-games-stats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169992618333:android:5a61eef2a106ecb7e3a8b4",
+        "android_client_info": {
+          "package_name": "com.example.boredgames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "169992618333-tfreu9kr0njs9l9b5k9ab3hg61fgf3jk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUwK0n2B2hW8zBa6x4qym8t2Www4cJnoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "169992618333-tfreu9kr0njs9l9b5k9ab3hg61fgf3jk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
