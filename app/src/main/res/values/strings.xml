@@ -40,7 +40,18 @@
     <string name="profile_set_profile">Set Profile</string>
     <string name="profile_toast_enter_display_name">Enter a display name</string>
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="update_stats_button">Update Stats</string>
+    <string name="hiscores_header">Leaderboard (W-D-L)</string>
+    <string name="first">1st Place:</string>
+    <string name="second">2nd Place:</string>
+    <string name="third">3rd Place:</string>
+    <string name="fourth">4th Place:</string>
+    <string name="fifth">5th Place:</string>
+    <string name="text_placeholder">Retrieving content...</string>
+    <string name="hs_search_hint">Enter Display Name</string>
+    <string name="hs_search_bt">Find Player</string>
+    <string name="search_results">press \"Find Player\"!</string>
+
+
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
