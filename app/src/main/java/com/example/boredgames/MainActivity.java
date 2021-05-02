@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public String APP_NAME = "Bored Games";
     public UUID MY_UUID = UUID.fromString("c6fccb66-aa27-11eb-bcbc-0242ac130002");
     private Integer DISCOVERABLE_DURATION = 35;
-    public String OTHER_PLAYERS_DEVICE_NAME;
+    public static String OTHER_PLAYERS_DEVICE_NAME;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     public static BluetoothSocket bluetoothSocket;
 
@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private class AcceptThreadTask extends AsyncTask<Void, Void, Boolean> {
         @Override
@@ -312,11 +311,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Don't forget to unregister the ACTION_FOUND receiver.
         //unregisterReceiver(receiver);
-        try {
+        /*try {
             bluetoothSocket.close();
         } catch (IOException e) {
 
-        }
+        }*/
     }
 
 }
