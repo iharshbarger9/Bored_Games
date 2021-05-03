@@ -1,6 +1,7 @@
 package com.example.boredgames;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Update;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,6 +15,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -166,6 +172,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //UpdateStats updatestats = new UpdateStats();
+        //updatestats.incrementWin("lood");
 
         // Set Connect To Button activity (client side)
         Button bt_home_connect_to = (Button) findViewById(R.id.bt_home_connect_to);
