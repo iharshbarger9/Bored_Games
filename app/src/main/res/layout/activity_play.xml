@@ -8,15 +8,6 @@
     tools:context=".PlayActivity">
 
     <ImageView
-        android:id="@+id/iv_play_other_player_pfp"
-        android:layout_width="111dp"
-        android:layout_height="99dp"
-        android:contentDescription="@string/play_other_player_pfp_description"
-        app:layout_constraintEnd_toEndOf="@+id/iv_play_other_player_token"
-        app:layout_constraintTop_toTopOf="@+id/iv_play_this_player_pfp"
-        app:srcCompat="@drawable/blank_profile_picture" />
-
-    <ImageView
         android:id="@+id/iv_play_this_player_token"
         android:layout_width="61dp"
         android:layout_height="47dp"
@@ -38,27 +29,15 @@
         app:srcCompat="@drawable/ttt_o" />
 
     <ImageView
-        android:id="@+id/iv_play_this_player_pfp"
-        android:layout_width="111dp"
-        android:layout_height="99dp"
-        android:layout_marginTop="36dp"
-        android:contentDescription="@string/play_this_player_pfp_description"
-        app:layout_constraintStart_toStartOf="@+id/iv_play_this_player_token"
-        app:layout_constraintTop_toBottomOf="@+id/iv_play_this_player_token"
-        app:srcCompat="@drawable/blank_profile_picture" />
-
-    <ImageView
         android:id="@+id/iv_ttt_board"
         android:layout_width="308dp"
         android:layout_height="345dp"
-        android:layout_marginTop="60dp"
         android:contentDescription="@string/play_ttt_board_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_play_this_player_pfp"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/tv_your_display_name"
         app:srcCompat="@drawable/tic_tac_toe_board" />
 
     <ImageButton
@@ -154,5 +133,25 @@
         app:layout_constraintStart_toStartOf="@+id/ibt_b3"
         app:layout_constraintTop_toTopOf="@+id/iv_ttt_board"
         app:srcCompat="@android:drawable/screen_background_light_transparent" />
+
+    <TextView
+        android:id="@+id/tv_your_display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/play_you"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="@+id/iv_play_this_player_token"
+        app:layout_constraintTop_toBottomOf="@+id/iv_play_this_player_token" />
+
+    <TextView
+        android:id="@+id/tv_opponent_display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/play_opponent"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_play_other_player_token"
+        app:layout_constraintTop_toBottomOf="@+id/iv_play_other_player_token" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
