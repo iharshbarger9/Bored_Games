@@ -30,6 +30,11 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+        Log.e("onCreate()", "method called");
+
         setContentView(R.layout.activity_profile);
 
         // Set Profile Picture image view's long press activity: to choose a new profile picture
@@ -134,6 +139,84 @@ public class ProfileActivity extends AppCompatActivity {
             ImageView iv_profile_display_picture = (ImageView) findViewById(R.id.iv_profile_display_picture);
             iv_profile_display_picture.setImageURI(selectedImage);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.e("onResume()", "method called");
+
+        AppDatabase db = AppDatabase.getDatabase(getApplication());
+
+        // Check if a profile already exists for this phone. If so, apply those saved value to display name editText and pfp ImageView
+        AppDatabase.getProfile(/*Settings.Secure.getString(ProfileActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID),*/ prof -> {
+            if (prof != null) {
+                // This profile already exists.
+
+                // Set editText's text
+                EditText et_profile_display_name = (EditText) findViewById(R.id.et_profile_display_name);
+                et_profile_display_name.setText(prof.getDisplayName());
+                Toast.makeText(getApplicationContext(), et_profile_display_name.getText().toString(),Toast.LENGTH_SHORT).show();
+
+                //Toast.makeText(getApplicationContext(), prof.getPfpPath(), Toast.LENGTH_SHORT).show();
+                // Set imageView's image
+                //  iv_profile_display_picture.setImageURI(Uri.fromFile(new File(prof.getPfpPath())));    //     THIS DOESN'T WORK
+                // iv_profile_display_picture.setImageURI(Uri.parse(new File(prof.getPfpPath()).toString()));
+
+              /*  File imgFile;
+                try {imgFile = new  File(new URI(prof.getPfpPath()));
+
+                    if(imgFile.exists()){
+
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                        iv_profile_display_picture.setImageBitmap(myBitmap);
+
+                    }
+                }
+                catch (URISyntaxException e) {} */
+
+
+
+            } else {Log.e("null profile", "null profile");}
+        });
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        Log.e("onRestart()", "method called");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.e("onStart()", "method called");
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        savedInstanceState.putString("myDisplayName", ((EditText) findViewById(R.id.et_profile_display_name)).getText().toString());
+        // etc.
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        String myDisplayName = savedInstanceState.getString("myDisplayName");
+        EditText et_profile_display_name = (EditText) findViewById(R.id.et_profile_display_name);
+        et_profile_display_name.setText(myDisplayName);
     }
 
 }

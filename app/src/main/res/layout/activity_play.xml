@@ -40,99 +40,99 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_your_display_name"
         app:srcCompat="@drawable/tic_tac_toe_board" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_b1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@null"
         android:contentDescription="@string/play_b1_button_description"
+        android:onClick="b1Click"
         app:layout_constraintStart_toStartOf="@+id/ibt_c1"
-        app:layout_constraintTop_toTopOf="@+id/ibt_b2"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/ibt_b2" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_c1"
         android:layout_width="96dp"
         android:layout_height="94dp"
         android:background="@null"
         android:contentDescription="@string/play_c1_button_description"
+        android:onClick="c1Click"
         app:layout_constraintStart_toStartOf="@+id/iv_ttt_board"
-        app:layout_constraintTop_toTopOf="@+id/ibt_c2"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/ibt_c2" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_b2"
         android:layout_width="91dp"
         android:layout_height="98dp"
         android:background="@null"
         android:contentDescription="@string/play_b2_button_description"
+        android:onClick="b2Click"
         app:layout_constraintStart_toStartOf="@+id/ibt_c2"
-        app:layout_constraintTop_toTopOf="@+id/ibt_b3"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/ibt_b3" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_c2"
         android:layout_width="94dp"
         android:layout_height="95dp"
         android:layout_marginStart="16dp"
         android:background="@null"
         android:contentDescription="@string/play_c2_button_description"
+        android:onClick="c2Click"
         app:layout_constraintStart_toEndOf="@+id/ibt_c1"
-        app:layout_constraintTop_toTopOf="@+id/ibt_c3"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/ibt_c3" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_b3"
         android:layout_width="96dp"
         android:layout_height="102dp"
         android:layout_marginTop="16dp"
         android:background="@null"
         android:contentDescription="@string/play_b3_button_description"
+        android:onClick="b3Click"
         app:layout_constraintStart_toStartOf="@+id/ibt_c3"
-        app:layout_constraintTop_toBottomOf="@+id/ibt_a3"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toBottomOf="@+id/ibt_a3" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_c3"
         android:layout_width="94dp"
         android:layout_height="96dp"
         android:layout_marginTop="8dp"
         android:background="@null"
         android:contentDescription="@string/play_c3_button_description"
+        android:onClick="c3Click"
         app:layout_constraintEnd_toEndOf="@+id/iv_ttt_board"
-        app:layout_constraintTop_toBottomOf="@+id/ibt_b3"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toBottomOf="@+id/ibt_b3" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_a1"
         android:layout_width="96dp"
         android:layout_height="97dp"
         android:background="@null"
         android:contentDescription="@string/play_a1_button_description"
+        android:onClick="a1Click"
         app:layout_constraintStart_toStartOf="@+id/ibt_b1"
-        app:layout_constraintTop_toTopOf="@+id/ibt_a2"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/ibt_a2" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_a2"
         android:layout_width="93dp"
         android:layout_height="95dp"
         android:background="@null"
         android:contentDescription="@string/play_a2_button_description"
+        android:onClick="a2Click"
         app:layout_constraintStart_toStartOf="@+id/ibt_b2"
-        app:layout_constraintTop_toTopOf="@+id/ibt_a3"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/ibt_a3" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibt_a3"
         android:layout_width="94dp"
         android:layout_height="93dp"
         android:layout_marginTop="16dp"
         android:background="@null"
         android:contentDescription="@string/play_a3_button_description"
+        android:onClick="a3Click"
         app:layout_constraintStart_toStartOf="@+id/ibt_b3"
-        app:layout_constraintTop_toTopOf="@+id/iv_ttt_board"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        app:layout_constraintTop_toTopOf="@+id/iv_ttt_board" />
 
     <TextView
         android:id="@+id/tv_your_display_name"

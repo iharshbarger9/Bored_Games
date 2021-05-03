@@ -55,19 +55,19 @@ public class StatsActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 switch(i) {
                                     case 1:
-                                        first.setText(document.getId() + " : " + document.get("win") + "-" + document.get("draw") + "-" + document.get("loss"));
+                                        first.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
                                         break;
                                     case 2:
-                                        second.setText(document.getId() + " : " + document.get("win") + "-" + document.get("draw") + "-" + document.get("loss"));
+                                        second.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
                                         break;
                                     case 3:
-                                        third.setText(document.getId() + " : " + document.get("win") + "-" + document.get("draw") + "-" + document.get("loss"));
+                                        third.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
                                         break;
                                     case 4:
-                                        fourth.setText(document.getId() + " : " + document.get("win") + "-" + document.get("draw") + "-" + document.get("loss"));
+                                        fourth.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
                                         break;
                                     case 5:
-                                        fifth.setText(document.getId() + " : " + document.get("win") + "-" + document.get("draw") + "-" + document.get("loss"));
+                                        fifth.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
                                         break;
                                 }
                                 i++;
