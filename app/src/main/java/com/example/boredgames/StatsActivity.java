@@ -36,6 +36,7 @@ public class StatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
+
         //constructing leaderboard
         TextView first = findViewById(R.id.first_spot);
         TextView second = findViewById(R.id.second_spot);
@@ -53,7 +54,7 @@ public class StatsActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             int i = 1;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                switch(i) {
+                                switch (i) {
                                     case 1:
                                         first.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
                                         break;
@@ -85,55 +86,21 @@ public class StatsActivity extends AppCompatActivity {
         search_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                search_et.getText();
-                stats_db.collection(COLLECTION_PATH).document(search_et.getText().toString()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot document) {
-                        if (document.exists()) {
-                            search_results.setText(document.getId() + " : " + document.get("win") + "-" + document.get("draw") + "-" + document.get("loss"));
-                        } else {
-                            search_results.setText("Player not found");
+                if (search_et.getText().toString().length() != 0) {
+                    stats_db.collection(COLLECTION_PATH).document(search_et.getText().toString()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot document) {
+                            if (document.exists()) {
+                                search_results.setText(String.format("%s : %s-%s-%s", document.getId(), document.get("win"), document.get("draw"), document.get("loss")));
+                            } else {
+                                search_results.setText(R.string.player_not_found);
+                            }
                         }
-                    }
-                });
-            }
-        });
-
-        //updateStats();
-        //testingFirestore();
-    }
-
-  /*  public void updateStats() {
-        //FirebaseFirestore stats_db = FirebaseFirestore.getInstance();
-        stats_db.document(DOCUMENT_PATH).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String winloss = documentSnapshot.getString("lood");
-                    Log.d(TAG, "");
-
-                    TextView testing = (TextView) findViewById(R.id.text_testUpdate);
-                    testing.setText(winloss);
+                    });
+                } else {
+                    search_results.setText(R.string.player_not_found);
                 }
             }
         });
     }
-
-    public void testingFirestore() {
-        FirebaseFirestore stats_db = FirebaseFirestore.getInstance();
-        DocumentReference statsRef = stats_db.document("stats/global stats");
-        statsRef
-                .update("lood", "beebee wins 0 losses")
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "score updated");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "failed");
-            }
-        });
-    } */
 }

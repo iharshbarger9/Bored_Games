@@ -1,6 +1,7 @@
 package com.example.boredgames;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Update;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,6 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
@@ -167,25 +173,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   /* private static class DisplayNameExchangeHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.e("received device name", "received other players display name");
-
-            switch (msg.what) {
-                case MyBluetoothService.MessageConstants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-
-                    // construct a string from the valid bytes in the buffer.
-                    String theirDisplayName = new String(readBuf, 0, msg.arg1);
-
-                    OTHER_PLAYERS_DISPLAY_NAME = theirDisplayName;
-
-            }
-
-        }
-    } */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
             String displayName = profile.getDisplayName();
             MY_DISPLAY_NAME = displayName;
         });
+
+        //UpdateStats updatestats = new UpdateStats();
+        //updatestats.incrementWin("lood");
 
         // Set Connect To Button activity (client side)
         Button bt_home_connect_to = (Button) findViewById(R.id.bt_home_connect_to);
