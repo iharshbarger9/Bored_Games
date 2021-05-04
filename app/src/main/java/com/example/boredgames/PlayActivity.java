@@ -1,30 +1,207 @@
 package com.example.boredgames;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.OnLifecycleEvent;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.UUID;
 
 public class PlayActivity extends AppCompatActivity {
 
      private enum Slot { X, O, empty }
+
+    private class WaitForMoveTaskk extends AsyncTask<Void, Void, Boolean> {
+        BluetoothSocket socket;
+        PlayActivity activity;
+
+        public WaitForMoveTaskk(BluetoothSocket bluetoothSocket, PlayActivity activity) {
+            this.socket = bluetoothSocket;
+            this.activity = activity;
+        }
+
+        public void updateActivity(PlayActivity activity) {
+            this.activity = activity;
+        }
+
+        private PlayActivity getActivity() {
+            return this.activity;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... none) {
+           // while (!this.getActivity().myTurn) {
+               // try {
+                   // this.wait(500);
+               // } catch (InterruptedException e) {
+                //   e.printStackTrace();
+               // }
+          /*  Boolean done = false;
+            while (!done) {
+                if (((MyApplication) activity.getApplication()).getPlayer1Turn() && !activity.amPlayer1) {
+                    (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+                }
+                if (!((MyApplication) activity.getApplication()).getPlayer1Turn() && activity.amPlayer1) {
+                    (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+                }
+                if (((MyApplication) activity.getApplication()).getPlayer1Turn() && activity.amPlayer1) {
+                    done = true;
+                }
+                if (!((MyApplication) activity.getApplication()).getPlayer1Turn() && !activity.amPlayer1) {
+                    done = true;
+                }
+                Log.e("trying to read move", "waiting in waitformovetask trying to read a move");
+            } */
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            Log.e("my turn now", "it is now my turn");
+        }
+    }
+
+    private class AcceptThread extends Thread {
+        private final BluetoothServerSocket mmServerSocket;
+
+        public AcceptThread() {
+            // Use a temporary object that is later assigned to mmServerSocket
+            // because mmServerSocket is final.
+            BluetoothServerSocket tmp = null;
+            try {
+                // MY_UUID is the app's UUID string, also used by the client code.
+                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(APP_NAME, MY_UUID);
+            } catch (IOException e) {
+                Log.e("socket listen() failed", "Socket's listen() method failed", e);
+            }
+            mmServerSocket = tmp;
+        }
+
+        public void run() {
+            BluetoothSocket socket = null;
+            // Keep listening until exception occurs or a socket is returned.
+            while (true) {
+                try {
+                    socket = mmServerSocket.accept();
+                } catch (IOException e) {
+                    Log.e("socket accept() failed", "Socket's accept() method failed", e);
+                    break;
+                }
+
+                if (socket != null) {
+                    // A connection was accepted. Perform work associated with
+                    // the connection in a separate thread.
+                    manageMyConnectedSocket(socket);
+                    try {
+                        mmServerSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Closes the connect socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                mmServerSocket.close();
+            } catch (IOException e) {
+                Log.e("cnnct socket not closed", "Could not close the connect socket", e);
+            }
+        }
+    }
+
+    private class ConnectThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final BluetoothDevice mmDevice;
+
+        public ConnectThread(BluetoothDevice device) {
+            // Use a temporary object that is later assigned to mmSocket
+            // because mmSocket is final.
+            BluetoothSocket tmp = null;
+            mmDevice = device;
+
+            try {
+                // Get a BluetoothSocket to connect with the given BluetoothDevice.
+                // MY_UUID is the app's UUID string, also used in the server code.
+                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException e) {
+                Log.e("socket create failed", "Socket's create() method failed", e);
+            }
+            mmSocket = tmp;
+        }
+
+        public void run() {
+            // Cancel discovery because it otherwise slows down the connection.
+            bluetoothAdapter.cancelDiscovery();
+
+            try {
+                // Connect to the remote device through the socket. This call blocks
+                // until it succeeds or throws an exception.
+                mmSocket.connect();
+            } catch (IOException connectException) {
+                // Unable to connect; close the socket and return.
+                try {
+                    mmSocket.close();
+                } catch (IOException closeException) {
+                    Log.e("client scket not closed", "Could not close the client socket", closeException);
+                }
+                return;
+            }
+
+            // The connection attempt succeeded. Perform work associated with
+            // the connection in a separate thread.
+            manageMyConnectedSocket(mmSocket);
+        }
+
+        // Closes the client socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) {
+                Log.e("client scket not closed", "Could not close the client socket", e);
+            }
+        }
+    }
+
+    private class AcceptThreadTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            AcceptThread acceptThread = new AcceptThread();
+            acceptThread.run();
+            acceptThread.cancel();
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+        }
+    }
+
+    private class ConnectThreadTask extends AsyncTask<BluetoothDevice, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(BluetoothDevice... devices) {
+            ConnectThread connectThread = new ConnectThread(devices[0]);
+            connectThread.run();
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+        }
+    }
 
     private static class MyHandler extends Handler {
         private final WeakReference<PlayActivity> mActivity;
@@ -39,6 +216,9 @@ public class PlayActivity extends AppCompatActivity {
             PlayActivity activity = mActivity.get();
             switch(msg.what)
             {
+                case MyBluetoothService.MessageConstants.MESSAGE_WRITE:
+                    Log.e("message sent", "message sent");
+                    break;
                 case MyBluetoothService.MessageConstants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
 
@@ -53,12 +233,13 @@ public class PlayActivity extends AppCompatActivity {
                         case "displayName":
                             // value is other device's display name
                             OTHER_PLAYERS_DISPLAY_NAME = value;
+                            ((MyApplication) activity.getApplication()).setOpponentDisplayName(value);
                             ((TextView) activity.findViewById(R.id.tv_opponent_display_name)).setText(OTHER_PLAYERS_DISPLAY_NAME);
+                            activity.closeSocket();
                             break;
                         case "newMove":
                             // value is the opponent's move
                             ImageView iv;
-                            activity.myTurn = !activity.myTurn;
                             switch(value) {
                                 case "a1":
                                     iv = (ImageView) activity.findViewById(R.id.ibt_a1);
@@ -96,11 +277,70 @@ public class PlayActivity extends AppCompatActivity {
                                     iv = (ImageView) activity.findViewById(R.id.ibt_c3);
                                     activity.updateSlot(iv, 8, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
                                     break;
+                                case " ":
+                                    Log.e("made move", "i just made a move and reestablished connection");
+                                    break;
                             }
+                            Log.e("got opponents move", value);
+                            // Update that it's my turn
+                            activity.closeSocket();
                             break;
+                        case "gameWon":
+                        case "gameDraw":
+                            // value is the opponent's move
+                            ImageView i;
+                            switch(value) {
+                                case "a1":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_a1);
+                                    activity.updateSlot(i, 0, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "a2":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_a2);
+                                    activity.updateSlot(i, 1, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "a3":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_a3);
+                                    activity.updateSlot(i, 2, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "b1":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_b1);
+                                    activity.updateSlot(i, 3, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "b2":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_b2);
+                                    activity.updateSlot(i, 4, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "b3":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_b3);
+                                    activity.updateSlot(i, 5, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "c1":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_c1);
+                                    activity.updateSlot(i, 6, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "c2":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_c2);
+                                    activity.updateSlot(i, 7, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case "c3":
+                                    i = (ImageView) activity.findViewById(R.id.ibt_c3);
+                                    activity.updateSlot(i, 8, activity.theirPiece(activity.amPlayer1, activity.player1IsX));
+                                    break;
+                                case " ":
+                                    Log.e("made move", "i just made a move and reestablished connection");
+                                    break;
+                            }
+                            Log.e("got opponents move", value);
+                            activity.player1IsX = !activity.player1IsX;
+
+                            activity.clearBoard();
+                            activity.setXorOImageViews(activity.amPlayer1, activity.player1IsX);
+                            // Update that it's my turn
+                            activity.closeSocket();
+                            break;
+                        // Update that it's my turn
                     }
                     break;
-
                 // ...
             }
         }
@@ -112,9 +352,16 @@ public class PlayActivity extends AppCompatActivity {
     public static String MY_DISPLAY_NAME;
     private boolean amPlayer1;
     private Boolean player1IsX = true;
-    private Boolean myTurn;
+    //private Boolean myTurn;
     private final MyHandler myHandler = new MyHandler(this);
     private Slot[] board = new Slot[9];
+    public UUID MY_UUID = UUID.fromString("c6fccb66-aa27-11eb-bcbc-0242ac130002");
+    public String APP_NAME = "Bored Games";
+    public String myMoveToSend = " ";
+
+    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    //private WaitForMoveTask waitingTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,25 +370,35 @@ public class PlayActivity extends AppCompatActivity {
 
         Log.e("on create play", "onCreate() for play activity");
 
-        // Check if there is a bluetooth socket
+        /*// Check if there is a bluetooth socket and it is connected
         if (((MyApplication) getApplication()).getSocket() == null) {
             Toast.makeText(getApplicationContext(), R.string.play_no_one_to_play_against,Toast.LENGTH_SHORT).show();
             return; // This page should do nothing if there's no opponent
         }
 
-        // Set your display name and send your to opponent
-        AppDatabase db = AppDatabase.getDatabase(getApplication());
+        if (!((MyApplication) getApplication()).getSocket().isConnected()) {
+            Toast.makeText(getApplicationContext(), R.string.play_no_one_to_play_against,Toast.LENGTH_SHORT).show();
+            return; // This page should do nothing if there's no connection
+        } */
+
+
+
+        // Get your display name and send your to opponent
+     /*  AppDatabase db = AppDatabase.getDatabase(getApplication());
         AppDatabase.getProfile(profile -> {
-            MY_DISPLAY_NAME = profile.getDisplayName();
-            (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), ("displayName," + MY_DISPLAY_NAME).getBytes());
-            (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
-            TextView tv_your_display_name = (TextView) findViewById(R.id.tv_your_display_name);
-            tv_your_display_name.setText(MY_DISPLAY_NAME);
-
+            if (profile != null) {
+                MY_DISPLAY_NAME = profile.getDisplayName();
+                (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), ("displayName," + MY_DISPLAY_NAME).getBytes());
+                (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+                TextView tv_your_display_name = (TextView) findViewById(R.id.tv_your_display_name);
+                tv_your_display_name.setText(MY_DISPLAY_NAME);
+            }
             //Log.e("dispName gotten from db", "updated my disp name from db");
-        });
+        }); */
 
-        if (MY_DISPLAY_NAME != null) {
+        updateDisplayNameViews();
+
+        /*if (MY_DISPLAY_NAME != null) {
             TextView tv_your_display_name = (TextView) findViewById(R.id.tv_your_display_name);
             tv_your_display_name.setText(MY_DISPLAY_NAME);
 
@@ -150,20 +407,27 @@ public class PlayActivity extends AppCompatActivity {
         if (OTHER_PLAYERS_DISPLAY_NAME != null) {
             TextView tv_opponent_display_name = (TextView) findViewById(R.id.tv_opponent_display_name);
             tv_opponent_display_name.setText(OTHER_PLAYERS_DISPLAY_NAME);
-        }
+        } */
 
 
         // Arbitrarily choose player1
         if ((int) ((MyApplication) getApplication()).getSocket().getRemoteDevice().getName().getBytes()[0] < (int) BluetoothAdapter.getDefaultAdapter().getName().getBytes()[0]) {
             amPlayer1 = true;
-            myTurn = true;
+            ((MyApplication) getApplication()).setIsMyTurn(player1IsX == amPlayer1);
             Toast.makeText(getApplicationContext(), R.string.play_youre_player_one,Toast.LENGTH_SHORT).show();
         } else {
             amPlayer1 = false;
-            myTurn = false;
+            ((MyApplication) getApplication()).setIsMyTurn(player1IsX == amPlayer1);
             Toast.makeText(getApplicationContext(), R.string.play_youre_player_two,Toast.LENGTH_SHORT).show();
         }
 
+      /*  MyApplication myApp = (MyApplication) getApplication();
+        myApp.setOpponentDisplayName(OTHER_PLAYERS_DISPLAY_NAME); */
+
+        /*if (myApp.getOpponentDisplayName() != null) {
+            TextView tv_opponent_display_name = (TextView) findViewById(R.id.tv_opponent_display_name);
+            tv_opponent_display_name.setText(myApp.getOpponentDisplayName());
+        } */
 
         // Set your display name
 
@@ -181,61 +445,12 @@ public class PlayActivity extends AppCompatActivity {
         } else {
             (new MyBluetoothService(handler)).readTask(((MyApplication) getApplication()).getSocket());
         } */
+       //waitingTask = new WaitForMoveTask(((MyApplication) getApplication()).getSocket(), this);
         startGame();
+        //waitingTask.execute();
     }
 
-    private static final Handler handlerx = new Handler(Looper.myLooper())
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch(msg.what)
-            {
-                case MyBluetoothService.MessageConstants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
 
-                    // construct a string from the valid bytes in the buffer.
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    Log.e("message received", readMessage);
-                    String[] type_value = readMessage.split(",");
-                    String type = type_value[0];
-                    String value = type_value[1];
-
-                    switch (type) {
-                        case "displayName":
-                            // value is other device's display name
-                            OTHER_PLAYERS_DISPLAY_NAME = value;
-                            break;
-                        case "theirMove":
-                            // value is the opponent's move
-                            break;
-                    }
-                    break;
-
-                // ...
-            }
-        }
-    };
-
-    @SuppressLint("HandlerLeak")
-    private static final Handler xsendDisplayNameHandler = new Handler(Looper.myLooper())
-    {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.e("received display name", "received other players display name");
-
-            switch (msg.what) {
-                case MyBluetoothService.MessageConstants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-
-                    // construct a string from the valid bytes in the buffer.
-                    String theirDisplayName = new String(readBuf, 0, msg.arg1);
-                    OTHER_PLAYERS_DISPLAY_NAME = theirDisplayName;
-
-            }
-
-        }
-    };
 
     private void setXorOImageViews(Boolean amPlayer1, Boolean player1IsX) {
         ImageView iv_play_this_player_token = (ImageView) findViewById(R.id.iv_play_this_player_token);
@@ -287,7 +502,7 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
+        Log.e("restoring state", "onRestoreInstanceState called");
         String myDisplayName = savedInstanceState.getString("myDisplayName");
         String theirDisplayName = savedInstanceState.getString("theirDisplayName");
 
@@ -302,122 +517,164 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     public void a1Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[0] != Slot.empty) return;
 
         // It is this player's turn and the slot they clicked on is empty
         ImageView ibt_a1 = (ImageView) findViewById(R.id.ibt_a1);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_a1, 0, myPiece);
+        myMoveToSend = "a1";
 
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,a1".getBytes());
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,a1".getBytes());
 
-        myTurn = false;
+       // MyApplication myApp = (MyApplication) getApplication();
+       // myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+       // waitingTask.execute();
     }
     public void a2Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[1] != Slot.empty) return;
 
-        ImageView ibt_a2 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_a2 = (ImageView) findViewById(R.id.ibt_a2);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_a2, 1, myPiece);
+        myMoveToSend = "a2";
 
 
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,a2".getBytes());
-        myTurn = false;
-
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,a2".getBytes());
+       // MyApplication myApp = (MyApplication) getApplication();
+      //  myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+        //waitingTask.execute();
 
     }
     public void a3Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[2] != Slot.empty) return;
 
-        ImageView ibt_a3 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_a3 = (ImageView) findViewById(R.id.ibt_a3);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_a3, 2, myPiece);
+        myMoveToSend = "a3";
 
 
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,a3".getBytes());
-        myTurn = false;
-
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,a3".getBytes());
+       // MyApplication myApp = (MyApplication) getApplication();
+       // myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+        //waitingTask.execute();
     }
     public void b1Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[3] != Slot.empty) return;
 
-        ImageView ibt_b1 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_b1 = (ImageView) findViewById(R.id.ibt_b1);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_b1, 3, myPiece);
+        myMoveToSend = "b1";
 
-
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,b1".getBytes());
-        myTurn = false;
-
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,b1".getBytes());
+      //  MyApplication myApp = (MyApplication) getApplication();
+      //  myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+        //waitingTask.execute();
     }
     public void b2Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[4] != Slot.empty) return;
 
-        ImageView ibt_b2 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_b2 = (ImageView) findViewById(R.id.ibt_b2);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_b2, 4, myPiece);
+        myMoveToSend = "b2";
 
 
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,b2".getBytes());
-        myTurn = false;
+        if (!((MyApplication) getApplication()).getSocket().isConnected()) {
+            Log.e("socket disconnected", "bluetooth socket no longer connected");
+        } else {
+            Log.e("socket connected", "bluetooth socket still connected");
+        }
 
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,b2".getBytes());
+        //MyApplication myApp = (MyApplication) getApplication();
+       // myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+
+        // waitingTask.execute();
     }
     public void b3Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[5] != Slot.empty) return;
 
-        ImageView ibt_b3 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_b3 = (ImageView) findViewById(R.id.ibt_b3);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_b3, 5, myPiece);
+        myMoveToSend = "b3";
 
-
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,b3".getBytes());
-        myTurn = false;
-
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,b3".getBytes());
+       // MyApplication myApp = (MyApplication) getApplication();
+       // myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+      //  waitingTask.execute();
     }
     public void c1Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[6] != Slot.empty) return;
 
-        ImageView ibt_c1 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_c1 = (ImageView) findViewById(R.id.ibt_c1);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_c1, 6, myPiece);
+        myMoveToSend = "c1";
 
-
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,c1".getBytes());
-        myTurn = false;
-
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,c1".getBytes());
+       // MyApplication myApp = (MyApplication) getApplication();
+       // myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+      //  waitingTask.execute();
     }
     public void c2Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[7] != Slot.empty) return;
 
-        ImageView ibt_c2 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_c2 = (ImageView) findViewById(R.id.ibt_c2);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_c2, 7, myPiece);
+        myMoveToSend = "c2";
 
 
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,c2".getBytes());
-        myTurn = false;
-
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,c2".getBytes());
+      //  MyApplication myApp = (MyApplication) getApplication();
+       // myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+       // waitingTask.execute();
     }
     public void c3Click(View v) {
-        if (!myTurn) return;
+        updateDisplayNameViews();
+        if (!myTurn()) return;
         if (board[8] != Slot.empty) return;
 
-        ImageView ibt_c3 = (ImageView) findViewById(R.id.ibt_a1);
+        ImageView ibt_c3 = (ImageView) findViewById(R.id.ibt_c3);
         Slot myPiece = myPiece(amPlayer1, player1IsX);
         updateSlot(ibt_c3, 8, myPiece);
+        myMoveToSend = "c3";
+
+        new ConnectThreadTask().execute(((MyApplication) getApplication()).getDevice());
 
 
-        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,c3".getBytes());
-        myTurn = false;
-
+        //(new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), "newMove,c3".getBytes());
+      //  MyApplication myApp = (MyApplication) getApplication();
+     //   myApp.setPlayer1Turn(!myApp.getPlayer1Turn());
+      //  waitingTask.execute();
     }
 
     private void clearBoard() {
@@ -449,22 +706,45 @@ public class PlayActivity extends AppCompatActivity {
     private void startGame() {
         clearBoard();
 
-        if (!myTurn) {
-            (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+        if (!myTurn()) {
+            new AcceptThreadTask().execute();
         }
+
+
+       // while (!myTurn()) {
+        //    (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+      //      try {
+      //          this.wait(100);
+     //       } catch (InterruptedException e) {
+     //           e.printStackTrace();
+     //       }
+     //   }
 
     }
 
-    private Boolean gameOver() {
-        if (board[0] == board[3] && board[3] == board[6]) return true;
-        if (board[1] == board[4] && board[4] == board[7]) return true;
-        if (board[2] == board[5] && board[5] == board[8]) return true;
-        if (board[0] == board[1] && board[1] == board[2]) return true;
-        if (board[3] == board[4] && board[4] == board[5]) return true;
-        if (board[6] == board[7] && board[7] == board[8]) return true;
-        if (board[0] == board[4] && board[4] == board[8]) return true;
-        if (board[2] == board[4] && board[4] == board[6]) return true;
+    private Boolean gameWon() {
+        if (board[0] == board[3] && board[3] == board[6] && board[0] != Slot.empty) return true;
+        if (board[1] == board[4] && board[4] == board[7] && board[4] != Slot.empty) return true;
+        if (board[2] == board[5] && board[5] == board[8] && board[2] != Slot.empty) return true;
+        if (board[0] == board[1] && board[1] == board[2] && board[0] != Slot.empty) return true;
+        if (board[3] == board[4] && board[4] == board[5] && board[4] != Slot.empty) return true;
+        if (board[6] == board[7] && board[7] == board[8] && board[6] != Slot.empty) return true;
+        if (board[0] == board[4] && board[4] == board[8] && board[4] != Slot.empty) return true;
+        if (board[2] == board[4] && board[4] == board[6] && board[4] != Slot.empty) return true;
         return false;
+    }
+
+    private Boolean gameDraw() {
+        if (board[0] == Slot.empty) return false;
+        if (board[1] == Slot.empty) return false;
+        if (board[2] == Slot.empty) return false;
+        if (board[3] == Slot.empty) return false;
+        if (board[4] == Slot.empty) return false;
+        if (board[5] == Slot.empty) return false;
+        if (board[6] == Slot.empty) return false;
+        if (board[7] == Slot.empty) return false;
+        if (board[8] == Slot.empty) return false;
+        return true;
     }
 
     private void updateSlot(ImageView iv, int id, Slot piece) {
@@ -512,10 +792,156 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    private Boolean myTurn() {
+        return ((MyApplication) getApplication()).getIsMyTurn();
+    }
+
+    public void closeSocket() {
+        try {
+            ((MyApplication) getApplication()).getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateDisplayNameViews() {
+        TextView tv_your_display_name = (TextView) findViewById(R.id.tv_your_display_name);
+        tv_your_display_name.setText(((MyApplication) getApplication()).getMyDisplayName());
+
+        TextView tv_opponent_display_name = (TextView) findViewById(R.id.tv_opponent_display_name);
+        tv_opponent_display_name.setText(((MyApplication) getApplication()).getOpponentDisplayName());
+    }
+
+    public void manageMyConnectedSocket(BluetoothSocket socket) {
+        Log.e("Connection established", "Connection has been established");
+        //bluetoothSocket = socket;
+
+        // Store socket in Application subclass for application-wide accessibility
+        MyApplication myApp = (MyApplication) getApplication();
+        myApp.setSocket(socket);
+
+        String type = "newMove,";
+        if (!myMoveToSend.equals(" ")) {
+            // This will be ran by the player who just made a move
+            // Check if this move has ended the game and appropriately update the stats
+            if (gameWon()) {
+                type = "gameWon,";
+                player1IsX = !player1IsX;
+
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearBoard();
+                        setXorOImageViews(amPlayer1, player1IsX);
+                    }
+                });
+
+                UpdateStats updatestats = new UpdateStats();
+                updatestats.incrementWin(((MyApplication) getApplication()).getMyDisplayName());
+                updatestats.incrementLoss(((MyApplication) getApplication()).getOpponentDisplayName());
+
+            } else if (gameDraw()) {
+                type = "gameDraw,";
+                player1IsX = !player1IsX;
+
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearBoard();
+                        setXorOImageViews(amPlayer1, player1IsX);
+                    }
+                });
+
+                UpdateStats updatestats = new UpdateStats();
+                updatestats.incrementDraw(((MyApplication) getApplication()).getMyDisplayName());
+                updatestats.incrementDraw(((MyApplication) getApplication()).getOpponentDisplayName());
+
+            }
+        }
+
+        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), (type + myMoveToSend).getBytes());
+        (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+
+        myMoveToSend = " ";
+
+
+        /*this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MyApplication) getApplication()).setIsMyTurn(!((MyApplication) getApplication()).getIsMyTurn());
+            }
+        }); */
+
+        // Flip whose turn it is
+        ((MyApplication) getApplication()).setIsMyTurn(!myApp.getIsMyTurn());
+        if (!myTurn()) {
+            new AcceptThreadTask().execute();
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.e("play act. destroyed", "Play activity has been destroyed and onDestroy() called");
+        try {
+            ((MyApplication) getApplication()).getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
+
+/*private static final Handler handlerx = new Handler(Looper.myLooper())
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch(msg.what)
+            {
+                case MyBluetoothService.MessageConstants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+
+                    // construct a string from the valid bytes in the buffer.
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Log.e("message received", readMessage);
+                    String[] type_value = readMessage.split(",");
+                    String type = type_value[0];
+                    String value = type_value[1];
+
+                    switch (type) {
+                        case "displayName":
+                            // value is other device's display name
+                            OTHER_PLAYERS_DISPLAY_NAME = value;
+                            break;
+                        case "theirMove":
+                            // value is the opponent's move
+                            break;
+                    }
+                    break;
+
+                // ...
+            }
+        }
+    };
+
+    @SuppressLint("HandlerLeak")
+    private static final Handler xsendDisplayNameHandler = new Handler(Looper.myLooper())
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.e("received display name", "received other players display name");
+
+            switch (msg.what) {
+                case MyBluetoothService.MessageConstants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+
+                    // construct a string from the valid bytes in the buffer.
+                    String theirDisplayName = new String(readBuf, 0, msg.arg1);
+                    OTHER_PLAYERS_DISPLAY_NAME = theirDisplayName;
+
+            }
+
+        }
+    };*/

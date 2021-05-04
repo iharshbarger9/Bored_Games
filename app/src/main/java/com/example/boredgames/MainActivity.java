@@ -3,6 +3,7 @@ package com.example.boredgames;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Update;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -36,13 +40,53 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     public String APP_NAME = "Bored Games";
-    public static String OTHER_PLAYERS_DISPLAY_NAME;
-    public static String MY_DISPLAY_NAME;
+    //public static String OTHER_PLAYERS_DISPLAY_NAME;
+    //public static String MY_DISPLAY_NAME;
     public UUID MY_UUID = UUID.fromString("c6fccb66-aa27-11eb-bcbc-0242ac130002");
-    private Integer DISCOVERABLE_DURATION = 35;
+    //private Integer DISCOVERABLE_DURATION = 35;
     public static String OTHER_PLAYERS_DEVICE_NAME;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     //public static BluetoothSocket bluetoothSocket;
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<MainActivity> mActivity;
+
+        public MyHandler(MainActivity activity) {
+            mActivity = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            MainActivity activity = mActivity.get();
+            switch(msg.what)
+            {
+                case MyBluetoothService.MessageConstants.MESSAGE_WRITE:
+                    Log.e("message sent", "message sent");
+                    break;
+                case MyBluetoothService.MessageConstants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+
+                    // construct a string from the valid bytes in the buffer.
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Log.e("message received", readMessage);
+                    String[] type_value = readMessage.split(",");
+                    String type = type_value[0];
+                    String value = type_value[1];
+
+                    switch (type) {
+                        case "displayName":
+                            // value is other device's display name
+                            ((MyApplication) activity.getApplication()).setOpponentDisplayName(value);
+                            activity.closeSocket();
+                            break;
+                    }
+                    break;
+                // ...
+            }
+        }
+    }
+
 
     private class AcceptThread extends Thread {
         private final BluetoothServerSocket mmServerSocket;
@@ -178,12 +222,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set your display name
+        ((MyApplication) getApplication()).setMainActivity(this);
+
+       /* // Set your display name
         AppDatabase db = AppDatabase.getDatabase(getApplication());
         AppDatabase.getProfile(profile -> {
-            String displayName = profile.getDisplayName();
-            MY_DISPLAY_NAME = displayName;
-        });
+            if (profile != null) {
+                String displayName = profile.getDisplayName();
+                MY_DISPLAY_NAME = displayName;
+            }
+        }); */
 
         //UpdateStats updatestats = new UpdateStats();
         //updatestats.incrementWin("lood");
@@ -213,9 +261,14 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Check if device is already connected
-                Boolean alreadyConnected = false; //bluetoothSocket != null;                       // Implement a real check for this
-                if (alreadyConnected) { return; }
+                // This button should do nothing if there is a bluetooth socket that is already connected
+                if (((MyApplication) getApplication()).getSocket() != null) {
+                    if (((MyApplication) getApplication()).getSocket().isConnected()) { return; }
+                }
+
+
+                Log.e("trying to connect", "trying to connect");
+                // Check if socket is already connected. If so, this button should do nothing
 
                 // Can now try to connect to remote device given its device name
                 EditText home_et_device_name = (EditText) findViewById(R.id.home_et_device_name);
@@ -267,9 +320,11 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Check if device is already connected
-                Boolean alreadyConnected = false; //bluetoothSocket != null;                       // Implement a real check for this
-                if (alreadyConnected) { return; }
+                // This button should do nothing if there is a bluetooth socket that is already connected
+                if (((MyApplication) getApplication()).getSocket() != null) {
+                    if (((MyApplication) getApplication()).getSocket().isConnected()) { return; }
+                }
+                Log.e("trying to connect", "trying to connect");
 
                 // Reaching this point means the device has bluetooth on and is not already connected and is ready to accept a connection
                 new AcceptThreadTask().execute();
@@ -325,6 +380,9 @@ public class MainActivity extends AppCompatActivity {
         // Store socket in Application subclass for application-wide accessibility
         MyApplication myApp = (MyApplication) getApplication();
         myApp.setSocket(socket);
+        myApp.setDevice(socket.getRemoteDevice());
+
+
 
 
 
@@ -334,9 +392,31 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 OTHER_PLAYERS_DEVICE_NAME = socket.getRemoteDevice().getName();
                 TextView tv_home_linked_with = (TextView) findViewById(R.id.tv_home_linked_with);
-                tv_home_linked_with.setText(String.format("%s %s", tv_home_linked_with.getText(), OTHER_PLAYERS_DEVICE_NAME));
+                tv_home_linked_with.setText(String.format("%s %s", getResources().getString(R.string.home_linked_with), OTHER_PLAYERS_DEVICE_NAME));
 
+                //EditText et_sending_value = (EditText) findViewById(R.id.et_sending_value);
+                //String sendValue = et_sending_value.getText().toString();
+
+                MyHandler myHandler = new MyHandler(  ((MyApplication) getApplication()).getMainActivity() );
+
+                AppDatabase db = AppDatabase.getDatabase(getApplication());
+                AppDatabase.getProfile(profile -> {
+                    if (profile != null) {
+                        ((MyApplication) getApplication()).setMyDisplayName(profile.getDisplayName());
+                        (new MyBluetoothService(myHandler)).writeTask(((MyApplication) getApplication()).getSocket(), ("displayName," + profile.getDisplayName()).getBytes());
+                        (new MyBluetoothService(myHandler)).readTask(((MyApplication) getApplication()).getSocket());
+                    }
+                });
                 Toast.makeText(getApplicationContext(), R.string.home_connection_successful,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), String.valueOf(System.currentTimeMillis()/10000),Toast.LENGTH_LONG).show();
+/*
+                MyApplication myApp = (MyApplication) getApplication();
+                try {
+                    myApp.getSocket().close();
+                    Toast.makeText(getApplicationContext(), "socket closed",Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } */
 
 
                 Intent myIntent = new Intent(MainActivity.this, PlayActivity.class);
@@ -348,6 +428,20 @@ public class MainActivity extends AppCompatActivity {
                 mbs.writeTask(socket, MY_DISPLAY_NAME.getBytes()); */
             }
         });
+    }
+
+    public void closeSocket() {
+        try {
+            ((MyApplication) getApplication()).getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        //savedInstanceState.put
     }
 
     @Override

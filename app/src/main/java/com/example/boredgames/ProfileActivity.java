@@ -1,6 +1,7 @@
 package com.example.boredgames;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Update;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -73,6 +74,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                 AppDatabase.setProfile(profile);
 
+                UpdateStats us = new UpdateStats();
+                us.createUser(displayName);
                 // Check if profile already exists
 
                 /*AppDatabase.getProfile(androidID, prof -> {
@@ -157,7 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
                 // Set editText's text
                 EditText et_profile_display_name = (EditText) findViewById(R.id.et_profile_display_name);
                 et_profile_display_name.setText(prof.getDisplayName());
-                Toast.makeText(getApplicationContext(), et_profile_display_name.getText().toString(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), et_profile_display_name.getText().toString(),Toast.LENGTH_SHORT).show();
 
                 //Toast.makeText(getApplicationContext(), prof.getPfpPath(), Toast.LENGTH_SHORT).show();
                 // Set imageView's image

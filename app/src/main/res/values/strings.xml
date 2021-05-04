@@ -17,7 +17,7 @@
     <string name="home_link_device_must_be_discoverable">Other devices can\'t discover your device.</string>
     <string name="play_this_player_pfp_description">Your Profile Picture</string>
     <string name="play_other_player_pfp_description">Other Player\'s Profile Picture</string>
-    <string name="home_arent_paired_with">This device not paired with that device</string>
+    <string name="home_arent_paired_with">Device not paired with that device</string>
     <string name="home_arent_paired_with_any_devices">Device not paired with any other devices</string>
     <string name="play_ttt_board_description">Tic-Tac-Toe Board</string>
     <string name="play_this_player_x_or_o_description">Your Token</string>
