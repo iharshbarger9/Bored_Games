@@ -42,21 +42,22 @@
         android:id="@+id/bt_home_play"
         android:layout_width="283dp"
         android:layout_height="55dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="28dp"
         android:text="@string/home_play_button"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@+id/bt_home_accept_connections"
-        app:layout_constraintStart_toStartOf="@+id/et_sending_value"
-        app:layout_constraintTop_toBottomOf="@+id/et_sending_value" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_home_linked_with" />
 
     <TextView
         android:id="@+id/tv_home_linked_with"
         android:layout_width="98dp"
         android:layout_height="30dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="48dp"
         android:text="@string/home_linked_with"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_sending_value"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bt_home_accept_connections" />
 
     <Button
@@ -82,14 +83,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bt_home_connect_to"
         app:layout_constraintTop_toTopOf="@+id/bt_home_connect_to" />
-
-    <EditText
-        android:id="@+id/et_sending_value"
-        android:layout_width="138dp"
-        android:layout_height="38dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/bt_home_accept_connections"
-        app:layout_constraintTop_toTopOf="@+id/tv_home_linked_with" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
