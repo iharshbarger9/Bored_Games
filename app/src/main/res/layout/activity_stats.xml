@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/text_placeholder"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/first_spot"
         app:layout_constraintTop_toBottomOf="@+id/first_spot" />
 
@@ -23,6 +24,7 @@
         android:text="@string/hiscores_header"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +36,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/first"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/leaderboard_tv" />
 
@@ -44,6 +47,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/second"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/first_tv" />
 
@@ -54,6 +58,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/third"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/second_tv" />
 
@@ -64,6 +69,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/fourth"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/third_tv" />
 
@@ -74,6 +80,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/fifth"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fourth_tv" />
 
@@ -84,6 +91,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="@string/text_placeholder"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/first_tv"
         app:layout_constraintTop_toBottomOf="@+id/leaderboard_tv" />
 
@@ -94,6 +102,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_placeholder"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/third_tv"
         app:layout_constraintTop_toBottomOf="@+id/second_spot" />
 
@@ -104,6 +113,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_placeholder"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/fourth_tv"
         app:layout_constraintTop_toBottomOf="@+id/third_spot" />
 
@@ -114,6 +124,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_placeholder"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/fifth_tv"
         app:layout_constraintTop_toBottomOf="@+id/fourth_spot" />
 
@@ -122,31 +133,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/hs_search_hint"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fifth_spot" />
+        app:layout_constraintTop_toBottomOf="@+id/search_results"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/hs_search_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="16dp"
         android:text="@string/hs_search_bt"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toEndOf="@+id/hs_search_tb"
-        app:layout_constraintTop_toBottomOf="@+id/fifth_spot" />
+        app:layout_constraintTop_toBottomOf="@+id/search_results" />
 
     <TextView
         android:id="@+id/search_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/search_results"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hs_search_tb" />
+        app:layout_constraintTop_toBottomOf="@+id/fifth_spot" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,9 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoredGames">
         <activity android:name=".StatsActivity"></activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".PlayActivity" />
         <activity android:name=".MainActivity">

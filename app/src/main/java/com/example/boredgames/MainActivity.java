@@ -352,17 +352,6 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(myIntent);
             }
         });
-
-        // Set Settings Button activity
-        Button bt_home_settings = (Button) findViewById(R.id.bt_home_settings);
-        bt_home_settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                MainActivity.this.startActivity(myIntent);
-            }
-        });
-
     }
 
     public void manageMyConnectedSocket(BluetoothSocket socket) {
