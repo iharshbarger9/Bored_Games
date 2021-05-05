@@ -12,6 +12,7 @@ public class MyApplication extends Application {
     private Boolean isMyTurn;
     private MainActivity mainActivity;
     private BluetoothDevice device;
+    private PlayActivity.AcceptThreadTask acceptThreadTask;
 
     public MainActivity getMainActivity() {
         return this.mainActivity;
@@ -23,6 +24,22 @@ public class MyApplication extends Application {
 
     public BluetoothDevice getDevice() {
         return this.device;
+    }
+
+    public void setAcceptThreadTask(PlayActivity.AcceptThreadTask t) {
+        this.acceptThreadTask = t;
+    }
+
+    public void cancelAcceptThreadTask() {
+        if (this.acceptThreadTask != null) {
+            this.acceptThreadTask.cancel(true);
+            this.acceptThreadTask = null;
+        }
+    }
+
+    public void executeAcceptThreadTask() {
+        this.acceptThreadTask.execute();
+        //this.acceptThreadTask = null;
     }
 
     public void setDevice(BluetoothDevice d) {

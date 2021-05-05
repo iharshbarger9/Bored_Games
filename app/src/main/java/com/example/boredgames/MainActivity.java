@@ -40,13 +40,9 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     public String APP_NAME = "Bored Games";
-    //public static String OTHER_PLAYERS_DISPLAY_NAME;
-    //public static String MY_DISPLAY_NAME;
     public UUID MY_UUID = UUID.fromString("c6fccb66-aa27-11eb-bcbc-0242ac130002");
-    //private Integer DISCOVERABLE_DURATION = 35;
     public static String OTHER_PLAYERS_DEVICE_NAME;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    //public static BluetoothSocket bluetoothSocket;
 
     private static class MyHandler extends Handler {
         private final WeakReference<MainActivity> mActivity;
@@ -224,17 +220,13 @@ public class MainActivity extends AppCompatActivity {
 
         ((MyApplication) getApplication()).setMainActivity(this);
 
-       /* // Set your display name
-        AppDatabase db = AppDatabase.getDatabase(getApplication());
-        AppDatabase.getProfile(profile -> {
-            if (profile != null) {
-                String displayName = profile.getDisplayName();
-                MY_DISPLAY_NAME = displayName;
-            }
-        }); */
-
-        //UpdateStats updatestats = new UpdateStats();
-        //updatestats.incrementWin("lood");
+        // Set "Linked with" TextView to reflect the currently connected device if there is one
+        TextView tv_home_linked_with = (TextView) findViewById(R.id.tv_home_linked_with);
+        if (((MyApplication) getApplication()).getDevice() != null) {
+            tv_home_linked_with.setText(String.format("%s %s", getResources().getString(R.string.home_linked_with), ((MyApplication) getApplication()).getDevice().getName()));
+        } else {
+            tv_home_linked_with.setText(R.string.home_linked_with);
+        }
 
         // Set Connect To Button activity (client side)
         Button bt_home_connect_to = (Button) findViewById(R.id.bt_home_connect_to);
@@ -375,17 +367,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void manageMyConnectedSocket(BluetoothSocket socket) {
         Log.e("Connection established", "Connection has been established");
-        //bluetoothSocket = socket;
 
         // Store socket in Application subclass for application-wide accessibility
         MyApplication myApp = (MyApplication) getApplication();
         myApp.setSocket(socket);
         myApp.setDevice(socket.getRemoteDevice());
-
-
-
-
-
 
         this.runOnUiThread(new Runnable() {
             @Override
@@ -393,9 +379,6 @@ public class MainActivity extends AppCompatActivity {
                 OTHER_PLAYERS_DEVICE_NAME = socket.getRemoteDevice().getName();
                 TextView tv_home_linked_with = (TextView) findViewById(R.id.tv_home_linked_with);
                 tv_home_linked_with.setText(String.format("%s %s", getResources().getString(R.string.home_linked_with), OTHER_PLAYERS_DEVICE_NAME));
-
-                //EditText et_sending_value = (EditText) findViewById(R.id.et_sending_value);
-                //String sendValue = et_sending_value.getText().toString();
 
                 MyHandler myHandler = new MyHandler(  ((MyApplication) getApplication()).getMainActivity() );
 
@@ -408,24 +391,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 Toast.makeText(getApplicationContext(), R.string.home_connection_successful,Toast.LENGTH_SHORT).show();
-                //Toast.makeText(getApplicationContext(), String.valueOf(System.currentTimeMillis()/10000),Toast.LENGTH_LONG).show();
-/*
-                MyApplication myApp = (MyApplication) getApplication();
-                try {
-                    myApp.getSocket().close();
-                    Toast.makeText(getApplicationContext(), "socket closed",Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } */
-
 
                 Intent myIntent = new Intent(MainActivity.this, PlayActivity.class);
                 MainActivity.this.startActivity(myIntent);
-/*
-                // Exchange profile information over the socket
-                MyBluetoothService mbs = new MyBluetoothService(new DisplayNameExchangeHandler());
-                mbs.readTask(socket);
-                mbs.writeTask(socket, MY_DISPLAY_NAME.getBytes()); */
             }
         });
     }
@@ -437,27 +405,4 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        //savedInstanceState.put
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //...
-
-        // Don't forget to unregister the ACTION_FOUND receiver.
-        //unregisterReceiver(receiver);
-        /*try {
-            if (isFinishing()) {
-                bluetoothSocket.close();
-            }
-        } catch (IOException e) {
-
-        } */
-    }
-
 }

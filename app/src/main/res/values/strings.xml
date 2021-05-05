@@ -26,6 +26,8 @@
     <string name="play_youre_player_one">You\'re Player 1</string>
     <string name="play_you">You</string>
     <string name="play_opponent">Opponent</string>
+    <string name="play_leave_game">Leave the game?</string>
+    <string name="play_are_you_sure_you_dont_want_to_play">Are you sure you don\'t want to play?</string>
     <string name="play_youre_player_two">You\'re Player 2</string>
     <string name="play_a1_button_description">The A 1 slot</string>
     <string name="play_a2_button_description">The A 2 slot</string>

@@ -32,8 +32,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         Log.e("onCreate()", "method called");
 
         setContentView(R.layout.activity_profile);
@@ -186,40 +184,4 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        Log.e("onRestart()", "method called");
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Log.e("onStart()", "method called");
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        // Save UI state changes to the savedInstanceState.
-        // This bundle will be passed to onCreate if the process is
-        // killed and restarted.
-        savedInstanceState.putString("myDisplayName", ((EditText) findViewById(R.id.et_profile_display_name)).getText().toString());
-        // etc.
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        String myDisplayName = savedInstanceState.getString("myDisplayName");
-        EditText et_profile_display_name = (EditText) findViewById(R.id.et_profile_display_name);
-        et_profile_display_name.setText(myDisplayName);
-    }
-
 }
